@@ -9,11 +9,23 @@ const matrix = [
   [0,1,0],
 ]
 
+const arena = createMatrix(12, 20);
+
+const player = {
+  pos: {x: 5, y: 5},
+  matrix: matrix
+}
+
+let lastTime = 0;
+let dropCounter = 0;
+let dropInterval = 1000;
+
 function collide(arena, player) {
   const [m, o] = [player.matrix, player.pos];
 
   for (let y = 0; y < matrix.length; ++y) {
     for (let x = 0; x < m[y].length; ++x)
+
   }
 }
 
@@ -58,9 +70,7 @@ function draw() {
   drawMatrix(player.matrix, player.pos)
 }
 
-let lastTime = 0;
-let dropCounter = 0;
-let dropInterval = 1000;
+
 
 function playerDrop() {
   player.pos.y++;
@@ -81,13 +91,7 @@ function update(time = 0) {
   requestAnimationFrame(update)
 }
 
-const arena = createMatrix(12, 20);
 
-
-const player = {
-  pos: {x: 5, y: 5},
-  matrix: matrix
-}
 
 document.addEventListener('keydown', event => {
   if (event.keyCode === 37 ) {
