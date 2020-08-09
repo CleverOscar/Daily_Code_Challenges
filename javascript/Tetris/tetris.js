@@ -1,36 +1,56 @@
+// canvas by getElementById
 const canvas = document.getElementById('tetris')
-const context = canvas.getContext('2d')
 
-context.scale(20,20);
+// context object with properties and methods for drawing
+const context = canvas.getContext("2d")
 
-const matrix = [
+
+// scale pieces
+context.scale(20,20)
+
+// tetris matrix , T shape hardcoded in for now
+const tetris = [
   [0,0,0],
   [1,1,1],
   [0,1,0],
-]
-
-const arena = createMatrix(12, 20);
-
-const player = {
-  pos: {x: 5, y: 5},
-  matrix: matrix
-}
-
-let lastTime = 0;
-let dropCounter = 0;
-let dropInterval = 1000;
+];
 
 function collide(arena, player) {
-  const [m, o] = [player.matrix, player.pos];
+  const [m, o] = [player.tetris, player.pos];
 
-  for (let y = 0; y < matrix.length; ++y) {
-    for (let x = 0; x < m[y].length; ++x)
-
+  for (let y = 0; y < m.length; ++y){
+    for (let x = 0; x < m[y].length; ++x){
+      if(m[y][x] !== 0 &&
+        (arena[y + o.y] &&
+          arena[y + o.y][x + o.x]) !== 0){
+          return true
+        }
+    }
   }
+  return false;
 }
 
-function drawMatrix(matrix, offset) {
-  matrix.forEach((row, y) => {
+function createTetris(w, h){
+  const matrix = [];
+
+  while (h--) {
+    matrix.push(new Array(w).fill(0));
+  }
+  return matrix
+}
+
+
+function draw() {
+  // fillStyle property can be any css color
+  context.fillStyle = '#000'
+  // fillRect(x,y, width, height)
+  context.fillRect(0,0, canvas.width, canvas.height);
+  drawTetris(arena, {x: 0, y:0})
+  drawTetris(player.tetris, player.pos);
+}
+
+function drawTetris(tetris, offset) {
+  tetris.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value !== 0) {
         context.fillStyle = 'red';
@@ -39,46 +59,26 @@ function drawMatrix(matrix, offset) {
                          1,
                          1)
       }
-    })
-  })
+    });
+  });
 }
 
-function createMatrix(width, height) {
-  const matrix = [];
+let lastTime = 0;
+let dropCounter = 0;
+let dropInterval = 1000;
 
-  while (height --) {
-    matrix.push(new Array(width).fill(0))
-  }
-
-  return matrix;
-}
-
-function merge(arena, player){
-  player.matrix.forEach((row, y) => {
-    row.forEach((value, x) => {
-      if (value !== 0) {
-        arena[y + player.pos.y][x + player.pos.x] = value
-      }
-    })
-  })
-}
-
-function draw() {
-  context.fillStyle = '#000';
-  context.fillRect(0,0, canvas.width, canvas.height)
-
-  drawMatrix(player.matrix, player.pos)
-}
-
-
-
-function playerDrop() {
+function playerDrop(){
   player.pos.y++;
+  if (collide(arena, player)){
+      player.pos.y--;
+      merge(arena,player);
+      player.pos.y = 0;
+  }
   dropCounter = 0;
 }
 
-function update(time = 0) {
-  const deltaTime = time - lastTime
+function update(time = 0){
+  const deltaTime = time - lastTime;
   lastTime = time
 
   dropCounter += deltaTime;
@@ -86,19 +86,35 @@ function update(time = 0) {
   if (dropCounter > dropInterval) {
     playerDrop();
   }
-
   draw();
   requestAnimationFrame(update)
 }
 
+function merge(arena, player) {
+  player.tetris.forEach((row, y) =>{
+    row.forEach((value, x) =>{
+      if (value !== 0) {
+        arena[y + player.pos.y][x + player.pos.x] = value;
+      }
+    })
+  })
+}
 
+const player = {
+  pos: {x: 5, y: 5},
+  tetris: tetris
+}
 
-document.addEventListener('keydown', event => {
-  if (event.keyCode === 37 ) {
-    player.pos.x--
-  } else if (event.keyCode === 39 ) {
-    player.pos.x++
-  } else if(event.keyCode === 40) {
+const arena = createTetris(12,20);
+console.log(arena);
+console.table(arena);
+
+document.addEventListener('keydown', e => {
+  if (e.keyCode === 37){
+    player.pos.x--;
+  } else if (e.keyCode === 39){
+    player.pos.x++;
+  } else if (e.keyCode === 40){
     playerDrop();
   }
 })
