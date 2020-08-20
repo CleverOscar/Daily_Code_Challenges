@@ -2,25 +2,14 @@
 // return whether any two numbers from the list add up to k.
 // For example, given [10, 15, 3, 7] and k of 17, return true since 10 + 7 is 17.
 
-const numbers = [10, 15, 3, 7, 4, 6]
+const numbers = [10, 15, 3, 7]
 
-// pass in the array data and k (target)
-function findSum(array, target) {
-  // store two numbers from array to add up 
-  for (let i = 0; i < array.length; i++){
-    num1 = array[i]
-    for (let j = 0; j < array.length;j++) {
-      num2 = array[j + 1]
 
-      while(num1 + num2 === target){
-        return true
-      } 
-    }
-    return false
-  }
-  // iterate through the array to find sum 
-  // if both numbers exist return true
+// return true or false if the list
+// holds values that sum up to k
+function twoSums(list, k) {
+  // store numbers to add up
+  // iterate over list to see
+  // if it contains values
+  //
 }
-
-
-console.log(findSum(numbers, 19))
