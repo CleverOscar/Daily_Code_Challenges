@@ -7,14 +7,14 @@ const numbers = [10, 15, 3, 7, 4, 6]
 // pass in the array data and k (target)
 function findSum(array, target) {
   // store two numbers from array to add up 
-  for (let i = 0; i < array.length; i++){
+  for (let i = 0; i < array.length; i++) {
     num1 = array[i]
-    for (let j = 0; j < array.length;j++) {
+    for (let j = 0; j < array.length; j++) {
       num2 = array[j + 1]
 
-      while(num1 + num2 === target){
+      while (num1 + num2 === target) {
         return true
-      } 
+      }
     }
     return false
   }
